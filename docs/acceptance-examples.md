@@ -76,7 +76,7 @@
 
 ## A10 ESP-IDF 自动识别（不告知框架）
 
-请求：`这个工程串口日志一直重复打印两次，帮我看看`（工作区为 ESP-IDF 工程：含 `sdkconfig`、`main/` 组件、`idf_component.yml`，不含 Makefile）
+请求：`这个工程串口日志一直重复打印两次，定位原因并修复`（工作区为 ESP-IDF 工程：含 `sdkconfig`、`main/` 组件、`idf_component.yml`，不含 Makefile）
 
 预期：阶段 1 从文件特征**自动识别 ESP-IDF**（不因 `CMakeLists.txt` 误判为普通 CMake 工程）；按 IDF 机制归因（如重复初始化、双输出通道、日志组件重复注册），交付最小 diff；门禁按 IDF 工具链判定。
 
@@ -86,7 +86,7 @@
 
 ## A11 Zephyr 应用（manifest 仓库不在应用目录、runner 烧录）
 
-请求：`这个 Zephyr 应用编译后板子不亮灯`（应用目录只有 `prj.conf` + `CMakeLists.txt` + `src/`，无 `west.yml`；烧录走 `west flash` 的板级 runner）
+请求：`这个 Zephyr 应用编译后板子不亮灯，定位原因并修复`（应用目录只有 `prj.conf` + `CMakeLists.txt` + `src/`，无 `west.yml`；烧录走 `west flash` 的板级 runner）
 
 预期：阶段 1 通过 `prj.conf`/`find_package(Zephyr)` 识别 Zephyr（不因应用目录无 `west.yml` 误判为普通 CMake 工程）；构建/烧录按 `west build` / `west flash` + 板级 runner 判定；评审只给最小 diff。
 
