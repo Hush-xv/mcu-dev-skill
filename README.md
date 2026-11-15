@@ -24,6 +24,12 @@ English summary: a doc-driven five-phase firmware workflow skill for ZCode (envi
 
 > 注：部分网络环境下 GitHub 市场源刷新会超时，推荐 clone 到本地后以**本地目录源**添加。
 
+## 覆盖范围与兼容性
+
+- **架构覆盖**：ARM Cortex-M（STM32/GD32/nRF/RP2040 等）、部分 RISC-V（WCH CH32V、ESP32-C 系）、8051（STC/N76/AT89）。AVR/MSP430/PIC/STM8 等平台可使用通用流程，但无专项评审清单。
+- **客户端兼容**：ZCode 桌面端（本地目录市场源与 GitHub 市场源）。插件全部为 Markdown/JSON，无运行时依赖，不需要 Node/Python。
+- **安装验证状态**：本地目录源安装流程已在开发环境准备就绪；GitHub 源安装与各宿主版本兼容性**待实测**（欢迎反馈）。
+
 ## 文档驱动用法
 
 技能假定你把芯片手册 PDF 放在项目 `docs/` 下：
