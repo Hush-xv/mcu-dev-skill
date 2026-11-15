@@ -12,5 +12,6 @@
 - 第二轮审查修正：`/mcu-pipeline` 步骤与最小 diff 口径统一；PFIC 限定 WCH/GD32，ESP32-C 按 IDF 中断机制检查；评审与修复拆分为独立任务模式；volatile 语义澄清（可见性≠原子性）
 - 第三、四轮审查修正：GD32V 中断控制器更正为 ECLIC（与 WCH PFIC、ESP32-C IDF 三分支）；门 2 分开判定编译工具与烧录工具；新增烧录执行边界（确认芯片/设备/擦除后才执行）；板级档案过期以关键事实为准（换 PCB/MCU/烧录器/时钟后重确认）；新增行为验收样例 docs/acceptance-examples.md
 - 第五、六轮审查修正：Makefile 生成只由门 1+编译工具控制（门 3 仅阻止烧录）；优先使用工程已有构建系统，不再对 Keil/IAR/ESP-IDF 等强生 Makefile；门 1/2 按构建系统判定（设备包/SDK 管理的资源不要求在项目目录）；**Flash 等待周期顺序更正**（升频先增等待再切高频）；ARM 清单按平台标注（STM32/GD32 专属项与 RP2040 XIP 差异）；结果分级 构建成功≠烧录成功≠功能实测通过，档案只在功能实测后建档；验收样例增至 A1~A8
+- 第七轮审查修正：GD32 Flash 等待周期寄存器按系列查（如 FMC_WS.WSCNT，非 FLASH_ACR.LATENCY）；门 1 应用入口按框架判定（`main()`/`app_main()`）；ARM 清单残余 STM32 风格项标注平台或泛化（AF0-AF15/APB/HSE_VALUE/定时器倍频/DMA 流）；ILP32E 栈对齐明确 4 字节；A8 增加型号前置条件，新增 A9 ESP-IDF 工程样例
 - 技术断言校准：SWD 失联改 Connect-Under-Reset 路径；WCH-LinkE 依据改为 1-wire SDI 接口兼容性；时钟未使能的后果标注依型号而异
 - 已知未验证项：GitHub 市场源在部分网络环境刷新超时（推荐 clone 本地添加）；插件 agents/ 形态未启用

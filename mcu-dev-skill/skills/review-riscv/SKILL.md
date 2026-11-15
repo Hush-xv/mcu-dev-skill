@@ -17,7 +17,7 @@ description: |
 - [ ] ilp32e 在 RISC-V ABI 规范中仍为草案，实际可用性取决于工具链——以厂商 SDK/官方示例的编译配置为准，并检查编译、链接与运行库一致
 - [ ] 不混用 xPack GCC 与 MounRiver 自带 GCC 的运行时库/启动文件（两套 libc 与 newlib 配置不兼容）
 - [ ] ESP32-C 系用 ESP-IDF 工具链（riscv32-esp-elf-gcc），与通用 riscv-none-elf-gcc 不互换
-- [ ] 链接脚本 ROM/RAM 起始与长度对应该型号；栈顶符号在 RAM 顶端且对齐（RV32E 要求 2/4 字节对齐）
+- [ ] 链接脚本 ROM/RAM 起始与长度对应该型号；栈顶符号在 RAM 顶端且按 ILP32E ABI **4 字节对齐**（以实际工具链配置为准）
 
 ## 2. 中断系统（RISC-V 无统一标准，按核确认）
 
