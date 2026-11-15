@@ -161,7 +161,7 @@ PDF 精读策略：
 
 | 架构 | 编译器 | 烧录/调试 | 板载检测 |
 |---|---|---|---|
-| ARM Cortex-M | `arm-none-eabi-gcc` | OpenOCD / pyOCD / J-Link | USB VID `0x0483`(ST) / `0x1366`(Segger)；CMSIS-DAP 探针的 VID:PID 依厂商/型号而定（部分用 ARM 的 `0x2e3a`），按探针核对或用工具枚举 |
+| ARM Cortex-M | `arm-none-eabi-gcc` | OpenOCD / pyOCD / J-Link | USB VID `0x0483`(ST) / `0x1366`(Segger)；CMSIS-DAP 探针的 VID:PID 依厂商/型号而定（常见如 DAPLink 的 `0x0d28:0x0204`），按探针核对或用工具枚举 |
 | RISC-V (WCH CH32V) | `riscv-none-elf-gcc`(xPack) 或 MounRiver 自带 GCC（`.wvproj` 工程走 MounRiver 构建入口） | OpenOCD-WCH / minichlink / WCH-LinkUtility | USB VID `0x1a86`(WCH-Link/CH34x) |
 | RISC-V (ESP32-C3/C6) | ESP-IDF (`riscv32-esp-elf-gcc`) | `esptool` / `idf.py flash` | USB VID `0x303a`(Espressif) |
 | 8051 (STC 等) | SDCC 或 Keil C51 | `stcgal` / 官方 STC-ISP（串口冷启动 ISP） | USB 转串口 VID `0x1a86`(CH340) |
