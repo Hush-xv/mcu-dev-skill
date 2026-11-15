@@ -45,7 +45,7 @@ description: |
 
 探测前先查板级档案：Glob `docs/board-*.md`——存在则通读（按 `board-profile` skill），以其事实表与规则表为开局基准。档案记录仅在**型号/板卡版本与当前目标匹配且测试日期可信**时优先采信（以档案中标注"硬件实测"的记录为准并向用户确认）；型号不匹配或久未更新的档案只作参考，不得覆盖当前工程探测结果。
 
-框架识别注意：单一文件特征可能与普通 CMake 工程重叠（如 `CMakeLists.txt`）——以**目录结构与组件声明的组合**判断，不凭单个文件下结论。ESP-IDF：`main/` 组件 + `sdkconfig` + `idf_component.yml`。Zephyr：候选特征为 `prj.conf`、`find_package(Zephyr)`、Zephyr 应用目录结构（`src/main.c` + `CMakeLists.txt` 引用 Zephyr）——`west.yml` 常位于 workspace 的 manifest 仓库而非应用目录，扫描应用子目录未命中时向上查 `.west/config` 或 manifest 路径再组合判断。
+框架识别注意：单一文件特征可能与普通 CMake 工程重叠（如 `CMakeLists.txt`）——以**目录结构与组件声明的组合**判断，不凭单个文件下结论。ESP-IDF：组合候选——顶层 `CMakeLists.txt` 引用 `project.cmake`、`sdkconfig`、`main/` 组件目录；`idf_component.yml` 是**可选的**组件依赖清单（缺失不影响识别）。Zephyr：候选特征为 `prj.conf`、`find_package(Zephyr)`、Zephyr 应用目录结构（`src/main.c` + `CMakeLists.txt` 引用 Zephyr）——`west.yml` 常位于 workspace 的 manifest 仓库而非应用目录，扫描应用子目录未命中时向上查 `.west/config` 或 manifest 路径再组合判断。
 
 探测不到的关键信息（目标型号、工具链、外设需求、晶振频率）用结构化提问补齐。
 
@@ -165,8 +165,8 @@ PDF 精读策略：
 | RISC-V (WCH CH32V) | `riscv-none-elf-gcc`(xPack) 或 MounRiver 自带 GCC | OpenOCD-WCH / minichlink / WCH-LinkUtility | USB VID `0x1a86`(WCH-Link/CH34x) |
 | RISC-V (ESP32-C3/C6) | ESP-IDF (`riscv32-esp-elf-gcc`) | `esptool` / `idf.py flash` | USB VID `0x303a`(Espressif) |
 | 8051 (STC 等) | SDCC 或 Keil C51 | `stcgal` / 官方 STC-ISP（串口冷启动 ISP） | USB 转串口 VID `0x1a86`(CH340) |
-| Zephyr RTOS 工程 | 工程配置的工具链（Zephyr SDK / GNU Arm Embedded 等） | `west build` / `west flash`（runner 由板级配置决定） | 按板级 runner 配置核对 |
-| PlatformIO 工程 | pio 平台包管理的工具链 | `pio run` / `pio run -t upload`（上传目标由 `platformio.ini` 声明） | `pio device list` |
+| Zephyr RTOS 工程 | 工程配置的工具链（Zephyr SDK / GNU Arm Embedded 等）；构建入口 `west build` | 烧录入口 `west flash`（runner 由板级配置决定） | runner 预检能力依板而定——不可预检时要求提供 OS 设备列表或探针枚举结果 |
+| PlatformIO 工程 | pio 平台包管理的工具链；构建入口 `pio run` | 烧录入口 `pio run -t upload`（上传目标由 `platformio.ini` 声明） | 串口上传用 `pio device list`（仅列串口，调试探针不在其中）——探针连接不可预检时要求提供设备列表或枚举结果 |
 
 板载检测列的 VID 只是**候选识别线索**（如 `0x1a86` 同时覆盖 WCH-Link 与 CH34x 串口）：确认目标在线还需核对 PID/设备名与工具连接结果（如 OpenOCD 连接输出、`esptool chip_id`、stcgal 握手）；用户提供的设备管理器截图或命令输出同样有效。
 

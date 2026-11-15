@@ -82,6 +82,24 @@
 
 判定：识别结果正确；没有套用裸 Make/CMake 工程的检查方式。
 
+变体：工作区为**不含 `idf_component.yml`** 的正常 IDF 工程（仅顶层 CMake 引用 `project.cmake` + `sdkconfig` + `main/`）——预期识别结果不变。
+
+## A11 Zephyr 应用（manifest 仓库不在应用目录、runner 烧录）
+
+请求：`这个 Zephyr 应用编译后板子不亮灯`（应用目录只有 `prj.conf` + `CMakeLists.txt` + `src/`，无 `west.yml`；烧录走 `west flash` 的板级 runner）
+
+预期：阶段 1 通过 `prj.conf`/`find_package(Zephyr)` 识别 Zephyr（不因应用目录无 `west.yml` 误判为普通 CMake 工程）；构建/烧录按 `west build` / `west flash` + 板级 runner 判定；评审只给最小 diff。
+
+判定：没有因缺 `west.yml` 误判为普通 CMake 工程；没有要求用户提供 `west.yml` 才继续。
+
+## A12 PlatformIO + 调试探针（无目标串口）
+
+请求：`PIO 工程用 J-Link 上传失败，机器上没接任何 USB 串口设备`
+
+预期：门 2/门 3 按 `platformio.ini` 声明的上传目标判定；明确 `pio device list` 只列串口、探针不在其中——不得把"没列出串口"当成"目标未连接"；要求提供 OS 设备列表或探针枚举结果再归因。
+
+判定：没有把探针连接误判为未连接；没有强行走串口检测。
+
 ## 记录方式
 
 每条验证后记录：ZCode 版本、日期、实际行为与预期的偏差。偏差即 issue——修源码 → 本地市场刷新 → 更新插件 → 复测该条。
