@@ -21,10 +21,10 @@ description: |
 
 ## 2. 中断系统（RISC-V 无统一标准，按核确认）
 
-- [ ] 中断控制器形态确认：WCH 自研 PFIC、CLIC、CLINT、PLIC——不同核的寄存器与编程模型完全不同，不可混写
+- [ ] 中断控制器形态确认：WCH 自研 PFIC、GD32V（Nuclei 核）ECLIC、CLIC、CLINT、PLIC——不同核的寄存器与编程模型完全不同，不可混写
 - [ ] WCH 平台：中断函数的属性名与写法**从项目启动文件和厂商示例确认**（如 `interrupt("WCH-interrupt")` 或 ch32v003fun 的宏，随工具链与芯片系列而异）；硬件压栈（HPE）是否启用要明确；中断 ABI、启动文件向量表与芯片中断控制器三者必须匹配
 - [ ] 向量模式（vectored）vs 直接模式（direct）与启动文件的跳转表一致
-- [ ] 使能链逐层确认，**按平台机制而非统一层名**：WCH/GD32 系为 mstatus.MIE + PFIC + 外设使能；ESP32-C 系为 IDF 中断分配器 + interrupt matrix + 外设使能
+- [ ] 使能链逐层确认，**按平台机制而非统一层名**：WCH 系为 mstatus.MIE + PFIC + 外设使能；GD32V 系为 mstatus.MIE + ECLIC + 外设使能；ESP32-C 系为 IDF 中断分配器 + interrupt matrix + 外设使能
 - [ ] 中断里清标志 + 最小化处理，与 ARM 相同的纪律适用
 - [ ] SysTick/系统节拍源与 RTOS port 匹配（ch32v003fun、FreeRTOS WCH port 各有约定）
 
@@ -77,7 +77,7 @@ description: |
 | WCH-Link 连不上芯片 | CH32V003 的 1-wire SDI 接口需 LinkE | 验证：核对适配器型号与 WCH 官方支持表；修法：换 WCH-LinkE |
 | OpenOCD 找不到 target cfg | 用了通用 OpenOCD | 验证：查 openocd 来源与脚本目录；修法：装 openocd-wch 或 minichlink |
 | 运行中随机内存踩踏 | 2KB RAM：.bss 与栈重叠 | 验证：map 文件核对段边界；修法：链接脚本修正栈顶与 .bss |
-| 中断永不触发 | 使能链漏一层（WCH/GD32：MIE+PFIC+外设；ESP32-C：IDF 中断分配+外设） | 验证：按平台机制逐层读使能；修法：补全使能链 |
+| 中断永不触发 | 使能链漏一层（WCH：MIE+PFIC+外设；GD32V：MIE+ECLIC+外设；ESP32-C：IDF 中断分配+外设） | 验证：按平台机制逐层读使能；修法：补全使能链 |
 | DMA 拿不到数据 | 通道映射凭记忆配错 | 验证：对照 RM DMA 请求表；修法：改正通道配置 |
 | 串口乱码/无输出 | 波特率源配错、printf 未重定向（`_write`）、TX 引脚复用错 | 验证：核对实际外设时钟；修法：重算波特率、补重定向与复用 |
 | RTOS 节拍忽快忽慢 | SysTick 源与 port 不匹配 | 验证：核对 port 文档要求；修法：按 port 配置节拍源 |
