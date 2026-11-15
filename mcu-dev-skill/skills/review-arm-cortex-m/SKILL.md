@@ -80,7 +80,8 @@ description: |
 |---|---|---|
 | 首次访问外设寄存器即总线错误 | 漏开外设时钟 | RCC 使能位先于任何寄存器访问 |
 | 外设完全无输出、引脚无波形 | AF 复用号错 | 对照数据手册复用表逐脚核对 |
-| UART 收发乱码 | 波特率用错总线时钟（APB1/APB2 混淆）或 `HSE_VALUE` 定义不符 | 按实际外设时钟重算 BRR；核对 `-DHSE_VALUE` |
+| 串口打印乱码/收发异常 | 波特率用错总线时钟（APB1/APB2 混淆）或 `HSE_VALUE` 定义不符 | 按实际外设时钟重算 BRR；核对 `-DHSE_VALUE` |
+| 串口完全无输出（printf 不打印） | printf 未重定向到该 UART（`fputc`/`_write`），或外设/GPIO 时钟未配 | 检查重定向实现与初始化顺序 |
 | 高频下随机 HardFault | Flash 等待周期不足 | 按频率表设 LATENCY；先提频后加等待 |
 | DMA 传输静默失败/数据全 0 | 缓冲区在 CCM/DTCM（不可 DMA） | 移入主 SRAM 并 4 字节对齐 |
 | 优化后 ISR 读到的总是旧值 | ISR 共享变量缺 volatile | 加 volatile，必要时加内存屏障 |
