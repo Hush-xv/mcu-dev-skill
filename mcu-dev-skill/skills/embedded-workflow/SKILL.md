@@ -24,7 +24,7 @@ description: |
 |---|---|---|
 | 纯分析（读日志/看代码/查档案） | 阶段 1 摘要 + 阶段 4 症状归因 | 不要求 PDF、工具链、板子在线 |
 | 只评审（不改代码） | 阶段 1 摘要 + 阶段 2（涉及寄存器/复用核对时）+ 阶段 4 | 不要求 PDF、工具链、板子在线 |
-| 代码修复 | 阶段 1 摘要 + 阶段 2（涉及寄存器/复用决定时）+ 阶段 3/4 | 可离线构建，不要求板子在线 |
+| 代码修复 | 阶段 1 摘要 + 阶段 2（涉及寄存器/复用决定时）+ 阶段 3/4 + 阶段 5 的门 1/2 | 不执行门 3（不要求板子在线）；缺工具时交付 diff 并标注"构建未验证" |
 | 实际烧录 / bring-up | 全部五阶段 + 三道门 | 无 |
 
 同一任务内阶段按序执行，每阶段产出是下一阶段的显式输入；症状归因可在任何模式下提前发生。
@@ -35,7 +35,7 @@ description: |
 
 | 探测目标 | 文件特征 |
 |---|---|
-| CubeMX / MounRiver 工程 | `*.ioc`、`*.mxproject` |
+| CubeMX / MounRiver 工程 | `*.ioc`、`*.mxproject`（CubeMX）；`.wvproj`（MounRiver） |
 | 构建系统 | `Makefile`、`CMakeLists.txt`、`platformio.ini`（PlatformIO）、`prj.conf`/`find_package(Zephyr)`（Zephyr）、`sdkconfig`/`idf_component.yml`（ESP-IDF） |
 | 商业 IDE | `*.uvprojx`(Keil)、`*.ewp`(IAR)、`.cproject`(CubeIDE) |
 | MCU 型号 | 启动文件名（`startup_stm32*` / `startup_ch32v*` / `STARTUP.A51`）、链接脚本、设备头文件 |
@@ -103,7 +103,7 @@ PDF 精读策略：
 - 新建文件或独立示例：生成完整可编译文件（含全部 include 与原型），不是片段；修改已有项目：默认输出**最小可应用 diff** 并保证可应用
 - 错误处理用返回码，禁止静默失败
 - 手册在手时寄存器值以手册为准，注释引用手册章节页码
-- 提交前心测编译：include 完整、无未声明变量、类型匹配
+- 交付前静态自检：include 完整、无未声明变量、类型匹配；工具可用时**运行实际构建**并按真实结果报告
 
 ### 阶段 4：硬件评审（加载对应架构清单）
 
@@ -161,8 +161,8 @@ PDF 精读策略：
 
 | 架构 | 编译器 | 烧录/调试 | 板载检测 |
 |---|---|---|---|
-| ARM Cortex-M | `arm-none-eabi-gcc` | OpenOCD / pyOCD / J-Link | USB VID `0x0483`(ST) / `0x1366`(Segger) / `0x2e3a`(CMSIS-DAP) |
-| RISC-V (WCH CH32V) | `riscv-none-elf-gcc`(xPack) 或 MounRiver 自带 GCC | OpenOCD-WCH / minichlink / WCH-LinkUtility | USB VID `0x1a86`(WCH-Link/CH34x) |
+| ARM Cortex-M | `arm-none-eabi-gcc` | OpenOCD / pyOCD / J-Link | USB VID `0x0483`(ST) / `0x1366`(Segger)；CMSIS-DAP 探针的 VID:PID 依厂商/型号而定（部分用 ARM 的 `0x2e3a`），按探针核对或用工具枚举 |
+| RISC-V (WCH CH32V) | `riscv-none-elf-gcc`(xPack) 或 MounRiver 自带 GCC（`.wvproj` 工程走 MounRiver 构建入口） | OpenOCD-WCH / minichlink / WCH-LinkUtility | USB VID `0x1a86`(WCH-Link/CH34x) |
 | RISC-V (ESP32-C3/C6) | ESP-IDF (`riscv32-esp-elf-gcc`) | `esptool` / `idf.py flash` | USB VID `0x303a`(Espressif) |
 | 8051 (STC 等) | SDCC 或 Keil C51 | `stcgal` / 官方 STC-ISP（串口冷启动 ISP） | USB 转串口 VID `0x1a86`(CH340) |
 | Zephyr RTOS 工程 | 工程配置的工具链（Zephyr SDK / GNU Arm Embedded 等）；构建入口 `west build` | 烧录入口 `west flash`（runner 由板级配置决定） | runner 预检能力依板而定——不可预检时要求提供 OS 设备列表或探针枚举结果 |

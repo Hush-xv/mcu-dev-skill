@@ -17,5 +17,6 @@
 - 第九轮审查修正：Zephyr 识别改为候选特征组合（`prj.conf`/`find_package(Zephyr)`/应用目录结构；`west.yml` 在 workspace manifest 仓库，需向上查 `.west/config`）；工具链矩阵补 Zephyr（west build/flash，runner 按板级配置）与 PlatformIO（pio run/upload）完整门禁条目；FIFO 与未用引脚检查项泛化
 - 第十轮全仓审查修正：STC8 EXTRAM 方向澄清（清零启用，按型号手册设定）；sbit 位地址通用规则限定可位寻址 SFR；SDCC 中断编号 n 与向量地址 0x0003+8n 区分；`/mcu-pipeline` 阶段 4 与最终呈现按模式限定（只评审不出 diff）；铁律 3 改为"未过的门只停止其保护的动作"；阶段 3 完整文件规则限定新建/示例（改已有项目用最小 diff）；阶段 1 查询顺序明确（档案→扫描→补问）；模糊症状提问口径统一（一条消息 ≤3 字段）；D-Cache 项泛化
 - 第十一轮审查修正：`/mcu-pipeline` 烧录任务改为使用工程已有构建系统（不再强制生成 Makefile）；ESP-IDF 识别改为组合候选（`idf_component.yml` 可选）；矩阵拆分构建/烧录/检测三列（west build vs west flash、pio run vs upload），探针不可预检时要求设备枚举；MCS-51 端口模式按厂商分支（STC PxM0/PxM1 vs N76 PxM1/PxM2）；位寻址范围补 0xF8；新增 A11（Zephyr 无应用内 west.yml）、A12（PIO 探针上传无串口）样例；症状表 Top 数与实际行数对齐（16/11/11）
+- 第十二轮审查修正：STC 端口复位默认按子系列拆分（STC8G/8H 除 P3.0/P3.1 外默认高阻，非准双向）；MounRiver 识别补 `.wvproj` 并写明构建入口；CMSIS-DAP 不再绑定固定 VID；代码修复模式明确执行门 1/2、不执行门 3；pdata 术语更正（分页 xdata）与 data/idata 上限说明；定时器初值公式限定模式/位宽；xPack/MounRiver 混用改为条件核验；"心测编译"改静态自检+实际构建；板级症状档案逐条标注证据状态（已实测/候选）
 - 技术断言校准：SWD 失联改 Connect-Under-Reset 路径；WCH-LinkE 依据改为 1-wire SDI 接口兼容性；时钟未使能的后果标注依型号而异
 - 已知未验证项：GitHub 市场源在部分网络环境刷新超时（推荐 clone 本地添加）；插件 agents/ 形态未启用

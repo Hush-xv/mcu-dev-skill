@@ -15,7 +15,7 @@ description: |
 
 - [ ] `-march`/`-mabi` 从该芯片的**官方工程或构建配置**取值，逐型号核验 ISA 扩展，不凭系列名套用：CH32V003 是 RV32EC（压缩指令、仅 16 个寄存器，ABI 用 ilp32e）；其余型号逐个确认——用错 -march 生成的代码不能跑或不能中断
 - [ ] ilp32e 在 RISC-V ABI 规范中仍为草案，实际可用性取决于工具链——以厂商 SDK/官方示例的编译配置为准，并检查编译、链接与运行库一致
-- [ ] 不混用 xPack GCC 与 MounRiver 自带 GCC 的运行时库/启动文件（两套 libc 与 newlib 配置不兼容）
+- [ ] 不**未经核对**混用 xPack GCC 与 MounRiver 自带 GCC 的运行时库/启动文件——两套的 libc/newlib 多库配置可能不兼容，混用前按 `-march/-mabi`、sysroot、多库配置与启动文件逐项核验
 - [ ] ESP32-C 系用 ESP-IDF 工具链（riscv32-esp-elf-gcc），与通用 riscv-none-elf-gcc 不互换
 - [ ] 链接脚本 ROM/RAM 起始与长度对应该型号；栈顶符号在 RAM 顶端且按 ILP32E ABI **4 字节对齐**（以实际工具链配置为准）
 
