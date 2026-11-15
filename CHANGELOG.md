@@ -19,5 +19,6 @@
 - 第十一轮审查修正：`/mcu-pipeline` 烧录任务改为使用工程已有构建系统（不再强制生成 Makefile）；ESP-IDF 识别改为组合候选（`idf_component.yml` 可选）；矩阵拆分构建/烧录/检测三列（west build vs west flash、pio run vs upload），探针不可预检时要求设备枚举；MCS-51 端口模式按厂商分支（STC PxM0/PxM1 vs N76 PxM1/PxM2）；位寻址范围补 0xF8；新增 A11（Zephyr 无应用内 west.yml）、A12（PIO 探针上传无串口）样例；症状表 Top 数与实际行数对齐（16/11/11）
 - 第十二轮审查修正：STC 端口复位默认按子系列拆分（STC8G/8H 除 P3.0/P3.1 外默认高阻，非准双向）；MounRiver 识别补 `.wvproj` 并写明构建入口；CMSIS-DAP 不再绑定固定 VID；代码修复模式明确执行门 1/2、不执行门 3；pdata 术语更正（分页 xdata）与 data/idata 上限说明；定时器初值公式限定模式/位宽；xPack/MounRiver 混用改为条件核验；"心测编译"改静态自检+实际构建；板级症状档案逐条标注证据状态（已实测/候选）
 - 第十三轮审查修正：STC15 复位默认细分子系列（W1 准双向 / 15H 高阻），无法确认按型号手册；A10/A11 请求改为"定位原因并修复"以对齐代码修复模式；定时器计算改为两步公式（Ftimer = Fosc/分频 → N = round(T×Ftimer) → 16 位重装 65536−N）
+- 第十四轮审查修正：A11 预期改为纯代码修复模式（west build 验证、不执行 west flash、不要求板子在线）；新增 A13 实际烧录样例（west flash 前确认芯片/探针/擦除）
 - 技术断言校准：SWD 失联改 Connect-Under-Reset 路径；WCH-LinkE 依据改为 1-wire SDI 接口兼容性；时钟未使能的后果标注依型号而异
 - 已知未验证项：GitHub 市场源在部分网络环境刷新超时（推荐 clone 本地添加）；插件 agents/ 形态未启用

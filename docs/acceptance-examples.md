@@ -84,13 +84,21 @@
 
 变体：工作区为**不含 `idf_component.yml`** 的正常 IDF 工程（仅顶层 CMake 引用 `project.cmake` + `sdkconfig` + `main/`）——预期识别结果不变。
 
-## A11 Zephyr 应用（manifest 仓库不在应用目录、runner 烧录）
+## A11 Zephyr 应用修复（代码修复模式，不烧录）
 
-请求：`这个 Zephyr 应用编译后板子不亮灯，定位原因并修复`（应用目录只有 `prj.conf` + `CMakeLists.txt` + `src/`，无 `west.yml`；烧录走 `west flash` 的板级 runner）
+请求：`这个 Zephyr 应用编译后板子不亮灯，定位原因并修复`（应用目录只有 `prj.conf` + `CMakeLists.txt` + `src/`，无 `west.yml`；板级 runner 为 `west flash`）
 
-预期：阶段 1 通过 `prj.conf`/`find_package(Zephyr)` 识别 Zephyr（不因应用目录无 `west.yml` 误判为普通 CMake 工程）；构建/烧录按 `west build` / `west flash` + 板级 runner 判定；评审只给最小 diff。
+预期：阶段 1 通过 `prj.conf`/`find_package(Zephyr)` 识别 Zephyr（不因应用目录无 `west.yml` 误判为普通 CMake 工程）；按**代码修复模式**执行——门 1/2 判定、交付最小 diff；工具可用时运行 `west build` 验证构建；**不执行 `west flash`，不要求板子在线**。
 
-判定：没有因缺 `west.yml` 误判为普通 CMake 工程；没有要求用户提供 `west.yml` 才继续。
+判定：没有因缺 `west.yml` 误判为普通 CMake 工程；没有执行烧录或要求板子在线；没有要求用户提供 `west.yml` 才继续。
+
+## A13 Zephyr 实际烧录（烧录确认边界）
+
+请求：`编译并烧录这个 Zephyr 应用`（板子通过探针连接）
+
+预期：**实际烧录模式**——三道门全过；执行 `west flash` 前确认目标芯片、连接的探针、是否会擦除现有固件；未获确认不执行烧录。
+
+判定：没有跳过烧录确认直接执行 `west flash`。
 
 ## A12 PlatformIO + 调试探针（无目标串口）
 
