@@ -1,0 +1,16 @@
+---
+description: 一键运行通用 MCU 固件开发五阶段流水线（环境分析→手册精读→编码→硬件评审→构建门禁）
+argument-hint: [要构建或配置的目标描述]
+---
+
+# 通用 MCU 固件流水线：$ARGUMENTS
+
+严格按 `embedded-workflow` skill 定义的五阶段流水线执行目标 $ARGUMENTS（若 $ARGUMENTS 未被替换为实际内容，以用户当前消息中的目标描述为准）：
+
+1. **阶段 1 环境分析** — 扫描项目文件 + 结构化提问，产出 Environment Profile。产出前不进入下一阶段。
+2. **阶段 2 手册精读** — 按档案中的可用文档执行 PDF 精读策略，产出带页码引用的 Documentation Extraction。手册缺失时执行降级策略并告知用户。
+3. **阶段 3 编码** — 按 Environment Profile 与手册摘录生成生产级代码（初始化顺序模板、volatile、ISR 纪律、禁 magic number）。
+4. **阶段 4 硬件评审** — 按目标架构加载对应清单（review-arm-cortex-m / review-riscv / review-mcs51），分级报告后重新生成应用全部修复的完整代码。
+5. **阶段 5 构建门禁** — 三道门（文件完备→工具链→板子在线）逐道检查，未过即 STOP 并给可执行指令；全过则生成反映真实探测路径的 Makefile。
+
+最后向用户呈现：环境摘要、关键手册发现（含页码）、评审修复摘要、最终代码、剩余的人工核对建议、验证状态声明（硬件实测/手册推导/未验证逐项标注）。
