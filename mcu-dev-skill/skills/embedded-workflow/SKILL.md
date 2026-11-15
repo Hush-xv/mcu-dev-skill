@@ -36,7 +36,7 @@ description: |
 | 探测目标 | 文件特征 |
 |---|---|
 | CubeMX / MounRiver 工程 | `*.ioc`、`*.mxproject` |
-| 构建系统 | `Makefile`、`CMakeLists.txt`、`platformio.ini` |
+| 构建系统 | `Makefile`、`CMakeLists.txt`、`platformio.ini`（PlatformIO）、`west.yml`+`Kconfig`（Zephyr）、`sdkconfig`/`idf_component.yml`（ESP-IDF） |
 | 商业 IDE | `*.uvprojx`(Keil)、`*.ewp`(IAR)、`.cproject`(CubeIDE) |
 | MCU 型号 | 启动文件名（`startup_stm32*` / `startup_ch32v*` / `STARTUP.A51`）、链接脚本、设备头文件 |
 | 开发方式 | 库 API 调用（`HAL_*` / `LL_*` / WCH `*_Periph`）/ 裸机寄存器直访 / 两者混合 |
@@ -44,6 +44,8 @@ description: |
 | 可用手册 | `docs/` 目录（见阶段 2 约定） |
 
 探测前先查板级档案：Glob `docs/board-*.md`——存在则通读（按 `board-profile` skill），以其事实表与规则表为开局基准。档案记录仅在**型号/板卡版本与当前目标匹配且测试日期可信**时优先采信（以档案中标注"硬件实测"的记录为准并向用户确认）；型号不匹配或久未更新的档案只作参考，不得覆盖当前工程探测结果。
+
+框架识别注意：单一文件特征可能与普通 CMake 工程重叠（如 `CMakeLists.txt`）——以**目录结构与组件声明的组合**判断（如 ESP-IDF 的 `main/` 组件 + `sdkconfig`、Zephyr 的 `west.yml` + `Kconfig`），不凭单个文件下结论。
 
 探测不到的关键信息（目标型号、工具链、外设需求、晶振频率）用结构化提问补齐。
 

@@ -5,11 +5,11 @@ argument-hint: [要构建或配置的目标描述]
 
 # 通用 MCU 固件流水线：$ARGUMENTS
 
-严格按 `embedded-workflow` skill 定义的五阶段流水线执行目标 $ARGUMENTS（若 $ARGUMENTS 未被替换为实际内容，以用户当前消息中的目标描述为准）：
+先按 `embedded-workflow` skill 的**任务模式表**判定本次请求的模式（纯分析/只评审/代码修复/实际烧录），再执行该模式启用的阶段；纯分析与只评审模式不进入编码阶段（若 $ARGUMENTS 未被替换为实际内容，以用户当前消息中的目标描述为准）：
 
 1. **阶段 1 环境分析** — 扫描项目文件 + 结构化提问，产出 Environment Profile。产出前不进入下一阶段。
 2. **阶段 2 手册精读** — 按档案中的可用文档执行 PDF 精读策略，产出带页码引用的 Documentation Extraction。手册缺失时执行降级策略并告知用户。
-3. **阶段 3 编码** — 按 Environment Profile 与手册摘录生成生产级代码（初始化顺序模板、volatile、ISR 纪律、禁 magic number）。
+3. **阶段 3 编码（仅代码修复/实际烧录模式执行）** — 按 Environment Profile 与手册摘录生成生产级代码（初始化顺序模板、volatile 语义、ISR 纪律、禁 magic number）。
 4. **阶段 4 硬件评审** — 按目标架构加载对应清单（review-arm-cortex-m / review-riscv / review-mcs51），分级报告后默认输出**最小可应用 diff**；仅单文件示例或用户明确要求完整替换时才输出完整文件。
 5. **阶段 5 构建门禁** — 按 `embedded-workflow` 的任务模式执行：实际烧录/bring-up 才要求三道门（文件完备→工具链→板子在线）全过并生成反映真实探测路径的 Makefile；纯代码任务到门 2 为止——缺工具链只**阻止构建验证**（给出安装指令，工具就绪后补做），不阻止交付代码补丁。
 
