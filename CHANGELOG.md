@@ -15,5 +15,6 @@
 - 第七轮审查修正：GD32 Flash 等待周期寄存器按系列查（如 FMC_WS.WSCNT，非 FLASH_ACR.LATENCY）；门 1 应用入口按框架判定（`main()`/`app_main()`）；ARM 清单残余 STM32 风格项标注平台或泛化（AF0-AF15/APB/HSE_VALUE/定时器倍频/DMA 流）；ILP32E 栈对齐明确 4 字节；A8 增加型号前置条件，新增 A9 ESP-IDF 工程样例
 - 第八轮审查修正：ARM 清单剩余 STM32 假设全部平台标注或泛化（DMA 流/CCM-DTCM/调试引脚/引脚复用）；阶段 1 补充 ESP-IDF 与 Zephyr 识别特征并要求组合判断（防单文件误判）；门 2 补 Zephyr（west）/PlatformIO（pio）构建入口；`/mcu-pipeline` 先判任务模式再执行阶段，编码仅限修复/烧录模式；新增 A10 ESP-IDF 自动识别样例
 - 第九轮审查修正：Zephyr 识别改为候选特征组合（`prj.conf`/`find_package(Zephyr)`/应用目录结构；`west.yml` 在 workspace manifest 仓库，需向上查 `.west/config`）；工具链矩阵补 Zephyr（west build/flash，runner 按板级配置）与 PlatformIO（pio run/upload）完整门禁条目；FIFO 与未用引脚检查项泛化
+- 第十轮全仓审查修正：STC8 EXTRAM 方向澄清（清零启用，按型号手册设定）；sbit 位地址通用规则限定可位寻址 SFR；SDCC 中断编号 n 与向量地址 0x0003+8n 区分；`/mcu-pipeline` 阶段 4 与最终呈现按模式限定（只评审不出 diff）；铁律 3 改为"未过的门只停止其保护的动作"；阶段 3 完整文件规则限定新建/示例（改已有项目用最小 diff）；阶段 1 查询顺序明确（档案→扫描→补问）；模糊症状提问口径统一（一条消息 ≤3 字段）；D-Cache 项泛化
 - 技术断言校准：SWD 失联改 Connect-Under-Reset 路径；WCH-LinkE 依据改为 1-wire SDI 接口兼容性；时钟未使能的后果标注依型号而异
 - 已知未验证项：GitHub 市场源在部分网络环境刷新超时（推荐 clone 本地添加）；插件 agents/ 形态未启用
