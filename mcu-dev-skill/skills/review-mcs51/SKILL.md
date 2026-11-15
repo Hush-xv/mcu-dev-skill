@@ -4,7 +4,7 @@ description: |
   8051/MCS-51 架构固件评审清单。当评审或修复 STC8H/STC15/STC89/N76E003/AT89 等 51 内核
   单片机代码，或遇到偶发错乱、串口乱码、莫名复位、烧录失败等症状需要归因时，
   或提到 SDCC、Keil C51、sfr/sbit、data/idata/xdata、__reentrant、
-  中断向量号、STC-ISP、stcgal、12T/1T 模式时使用。按本清单逐类核查后分级报告并重新生成修复代码。
+  中断向量号、STC-ISP、stcgal、12T/1T 模式时使用。按本清单逐类核查后分级报告，修复默认输出最小可应用 diff。
 ---
 
 # 8051 (MCS-51) 评审清单
