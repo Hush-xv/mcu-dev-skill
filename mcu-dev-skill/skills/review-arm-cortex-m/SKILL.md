@@ -11,14 +11,16 @@ description: |
 
 配合 `embedded-workflow` 阶段 4 使用。逐类核查，分级 Critical / High / Medium，报告后默认输出**最小可应用 diff**；仅单文件示例或用户明确要求完整替换时才输出完整文件。
 
+**适用范围标注**：标【STM32/GD32】等前缀的项仅适用对应平台；其余为 Cortex-M 通用检查。RP2040（XIP 外置 Flash）、nRF 等平台遇到不适用项时，按其手册确认对应概念，不照单全查。
+
 ## 1. 时钟与等待周期
 
-- [ ] PLL 配置产生的实际频率 = 预期频率（输入/VCO/输出范围全部核对）
-- [ ] Flash 等待周期（FLASH_ACR.LATENCY）与 HCLK 匹配；**先提频后加等待周期，先降等待周期后降频**
-- [ ] 各总线（AHB/APB1/APB2）分频后不超过各自上限
-- [ ] HSE/PLL 就绪标志带超时检测后才切换系统时钟
-- [ ] 时钟切换后 SWS 标志确认切换完成
-- [ ] 高端型号（F4/F7/H7）稳压器档位与超频 Over-drive 模式
+- [ ] Flash 等待周期与 HCLK 匹配，**顺序不可反**：升频**先增加等待周期再切换高频**，降频先切低频再减等待周期（【STM32/GD32】FLASH_ACR.LATENCY；按具体器件、供电电压与手册核对；RP2040 等外置 QSPI/XIP Flash 平台无此项，按平台手册确认）
+- [ ] 【STM32/GD32】PLL 配置产生的实际频率 = 预期频率（输入/VCO/输出范围全部核对）
+- [ ] 【STM32/GD32】各总线（AHB/APB1/APB2）分频后不超过各自上限
+- [ ] HSE/PLL 就绪标志带超时检测后才切换系统时钟（就绪标志按平台确认）
+- [ ] 【STM32/GD32】时钟切换后 SWS 标志确认切换完成
+- [ ] 【STM32/GD32】高端型号（F4/F7/H7）稳压器档位与超频 Over-drive 模式
 
 ## 2. 初始化顺序
 
@@ -57,7 +59,7 @@ description: |
 
 ## 6. FreeRTOS（如使用）
 
-- [ ] HAL 时基不用 SysTick（换 TIM6/7 等空闲定时器）
+- [ ] 【STM32 HAL】HAL 时基不用 SysTick（换 TIM6/7 等空闲定时器）
 - [ ] ISR 内只用 `*FromISR()` 变体，唤醒更高优先级任务后调 `portYIELD_FROM_ISR()`
 - [ ] `configPRIO_BITS` 与芯片 `__NVIC_PRIO_BITS` 一致
 - [ ] 任务栈用 `uxTaskGetStackHighWaterMark` 验证过；开发期开 `configCHECK_FOR_STACK_OVERFLOW`
@@ -70,9 +72,9 @@ description: |
 
 ## 8. 安全
 
-- [ ] 读保护（RDP）级别与部署阶段匹配；量产关调试口
+- [ ] 【STM32/GD32】读保护（RDP）级别与部署阶段匹配；量产关调试口
 - [ ] 看门狗已启用且喂狗路径无死区
-- [ ] Flash 中无硬编码密钥；敏感扇区考虑 PCROP
+- [ ] Flash 中无硬编码密钥；【STM32/GD32】敏感扇区考虑 PCROP
 
 ## 症状 → 常见原因 → 验证与修法（Top 15，按出现频率排序）
 
@@ -82,7 +84,7 @@ description: |
 | 外设完全无输出、引脚无波形 | AF 复用号错 | 验证：数据手册复用表逐脚核对；修法：改正 AF 号 |
 | 串口打印乱码/收发异常 | 波特率用错总线时钟（APB1/APB2 混淆）或 `HSE_VALUE` 定义不符 | 验证：打印实际外设时钟并与预期比对；修法：重算 BRR、核对 `-DHSE_VALUE` |
 | 串口完全无输出（printf 不打印） | printf 未重定向到该 UART（`fputc`/`_write`），或外设/GPIO 时钟未配 | 验证：检查重定向实现与初始化顺序；修法：补重定向、先配时钟 |
-| 高频下随机 HardFault | Flash 等待周期不足 | 验证：HCLK 对照等待周期表；修法：按表设 LATENCY，先提频后加等待 |
+| 高频下随机 HardFault | Flash 等待周期不足 | 验证：HCLK 对照等待周期表；修法：升频**先增等待周期再切高频**，降频反向（按器件与供电电压核对） |
 | DMA 传输静默失败/数据全 0 | 缓冲区在 CCM/DTCM（不可 DMA） | 验证：链接脚本查看缓冲区所在段；修法：移入主 SRAM 并 4 字节对齐 |
 | 优化后 ISR 读到的总是旧值 | ISR 共享变量缺 volatile | 验证：反汇编确认读取被优化外提；修法：加 volatile，必要时加屏障 |
 | SPI 完全不通 | CPOL/CPHA 与从机不符 | 验证：逻辑分析仪比对时钟相位；修法：按从机手册改模式 0~3 |
