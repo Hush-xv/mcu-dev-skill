@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://github.com/Hush-xv/mcu-dev-skill">
-    <img src="imgs/logo.svg" alt="mcu-dev-skill — 文档驱动的 MCU 固件开发技能包（环境分析 → 手册精读 → 编码 → 硬件评审 → 构建门禁）" width="640" />
+    <img src="imgs/banner.svg" alt="mcu-dev-skill — 文档驱动的 MCU 固件开发技能包（环境分析 → 手册精读 → 编码 → 硬件评审 → 构建门禁）" width="640" />
   </a>
 </div>
 
