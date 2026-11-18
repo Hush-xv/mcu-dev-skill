@@ -1,15 +1,15 @@
 <div align="center">
-
-# ⚙️ mcu-dev-skill
-
-**通用 MCU 固件开发技能包 —— 让 AI 像资深固件工程师一样工作**
-
-*文档驱动 · 五阶段流水线 · 硬件级评审 · 构建门禁*
-
+  <a href="https://github.com/Hush-xv/mcu-dev-skill">
+    <img src="imgs/logo.svg" alt="mcu-dev-skill — 文档驱动的 MCU 固件开发技能包（环境分析 → 手册精读 → 编码 → 硬件评审 → 构建门禁）" width="640" />
+  </a>
 </div>
+
+<p align="center"><b>通用 MCU 固件开发技能包 —— 让 AI 像资深固件工程师一样工作</b></p>
+<p align="center"><i>Doc-driven five-phase firmware workflow skills for ZCode: environment analysis → datasheet research → coding → hardware review → build gates.</i></p>
 
 <p align="center">
   <a href="https://github.com/Hush-xv/mcu-dev-skill/releases"><img alt="Release" src="https://img.shields.io/github/v/tag/Hush-xv/mcu-dev-skill?style=flat-square&label=release" /></a>
+  <a href="https://github.com/Hush-xv/mcu-dev-skill/actions/workflows/validate.yml"><img alt="Validate" src="https://img.shields.io/github/actions/workflow/status/Hush-xv/mcu-dev-skill/validate.yml?style=flat-square&label=validate" /></a>
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/github/license/Hush-xv/mcu-dev-skill?style=flat-square" /></a>
   <a href="#包含的技能"><img alt="Skills" src="https://img.shields.io/badge/skills-6-blue?style=flat-square" /></a>
   <a href="#安装"><img alt="Platform" src="https://img.shields.io/badge/ZCode-%E6%A1%8C%E9%9D%A2%E7%AB%AF-blueviolet?style=flat-square" /></a>
