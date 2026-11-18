@@ -4,12 +4,12 @@ description: |
   RISC-V 架构固件评审清单。当评审或修复 CH32V003/V203/V307、GD32V、ESP32-C3/C6 等 RISC-V
   单片机代码，或遇到连不上芯片、烧录失败、中断异常、随机内存踩踏等症状需要归因时，
   或提到 riscv-none-elf-gcc、-march/-mabi、CLIC/CLINT/PLIC、WCH-Link、minichlink、
-  esptool、ch32v003fun、ESP-IDF、RV32EC 时使用。按本清单逐类核查后分级报告，修复默认输出最小可应用 diff。
+  esptool、ch32v003fun、ESP-IDF、RV32EC 时使用。按问题范围裁剪核查：窄问题只查相关类目，输出结论+问题列表；全面评审或跨类目改动才逐类核查+分级报告。修复默认输出最小可应用 diff。
 ---
 
 # RISC-V 评审清单
 
-配合 `embedded-workflow` 阶段 4 使用。覆盖 WCH CH32V / GD32V / ESP32-C 系三类主流生态。逐类核查，分级 Critical / High / Medium，报告后默认输出**最小可应用 diff**；仅单文件示例或用户明确要求完整替换时才输出完整文件。
+配合 `embedded-workflow` 阶段 4 使用。覆盖 WCH CH32V / GD32V / ESP32-C 系三类主流生态。按问题范围裁剪：窄问题只核查相关类目，输出结论+问题列表；用户要求全面评审或改动跨类目时才逐类核查，分级 Critical / High / Medium 出完整报告。修复默认输出**最小可应用 diff**；仅单文件示例或用户明确要求完整替换时才输出完整文件。
 
 ## 1. 工具链与 ABI（RISC-V 特有，最高频翻车点）
 

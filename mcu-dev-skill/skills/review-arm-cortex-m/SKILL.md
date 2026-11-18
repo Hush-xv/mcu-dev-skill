@@ -4,12 +4,12 @@ description: |
   ARM Cortex-M 架构固件评审清单。当评审或修复 STM32/GD32/NRF52/RP2040 等 Cortex-M 内核
   单片机代码，或遇到芯片失联、外设无输出、串口乱码、随机 HardFault、DMA 静默失败等症状
   需要归因时，或提到 NVIC、Flash 等待周期、CCM/TCM、SysTick、FreeRTOS 边界优先级、
-  Cortex-M 硬错误时使用。按本清单逐类核查后分级报告，修复默认输出最小可应用 diff。
+  Cortex-M 硬错误时使用。按问题范围裁剪核查：窄问题只查相关类目，输出结论+问题列表；全面评审或跨类目改动才逐类核查+分级报告。修复默认输出最小可应用 diff。
 ---
 
 # ARM Cortex-M 评审清单
 
-配合 `embedded-workflow` 阶段 4 使用。逐类核查，分级 Critical / High / Medium，报告后默认输出**最小可应用 diff**；仅单文件示例或用户明确要求完整替换时才输出完整文件。
+配合 `embedded-workflow` 阶段 4 使用。按问题范围裁剪：窄问题只核查相关类目，输出结论+问题列表；用户要求全面评审或改动跨类目时才逐类核查，分级 Critical / High / Medium 出完整报告。修复默认输出**最小可应用 diff**；仅单文件示例或用户明确要求完整替换时才输出完整文件。
 
 **适用范围标注**：标【STM32/GD32】等前缀的项仅适用对应平台；其余为 Cortex-M 通用检查。RP2040（XIP 外置 Flash）、nRF 等平台遇到不适用项时，按其手册确认对应概念，不照单全查。
 
