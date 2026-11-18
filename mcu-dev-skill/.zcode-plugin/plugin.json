@@ -1,6 +1,6 @@
 {
   "name": "mcu-dev-skill",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Universal MCU firmware development workflow with embedded C quality review, per-architecture checklists for ARM Cortex-M, RISC-V, 8051, and board-profile knowledge capture.",
   "author": { "name": "hush" },
   "skills": "./skills",
