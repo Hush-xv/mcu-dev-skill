@@ -1,7 +1,7 @@
 {
   "name": "mcu-dev-skill",
   "version": "0.4.0",
-  "description": "Universal MCU firmware development workflow: doc-driven five-phase pipeline (environment analysis, documentation research, coding, hardware review, build gates) with per-architecture review checklists for ARM Cortex-M, RISC-V, 8051, plus board-profile knowledge capture.",
+  "description": "Universal MCU firmware development workflow with embedded C quality review, per-architecture checklists for ARM Cortex-M, RISC-V, 8051, and board-profile knowledge capture.",
   "author": { "name": "hush" },
   "skills": "./skills",
   "commands": "./commands"

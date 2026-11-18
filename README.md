@@ -9,6 +9,7 @@ English summary: a doc-driven five-phase firmware workflow skill for ZCode (envi
 | 技能 | 职责 |
 |---|---|
 | `embedded-workflow` | 主工作流：五阶段流水线、`docs/` 手册目录约定、工具链矩阵、三道构建门禁 |
+| `review-embedded-c` | 架构无关的嵌入式 C 质量检查：边界、整数、生命周期、错误处理、并发与工具证据 |
 | `review-arm-cortex-m` | ARM 评审清单 + 症状→原因→修法表（STM32/GD32/nRF/RP2040） |
 | `review-riscv` | RISC-V 评审清单 + 症状表（CH32V003/V203/V307、GD32V、ESP32-C 系） |
 | `review-mcs51` | 8051 评审清单 + 症状表（STC8H/STC15/STC89/N76E003 等） |
@@ -29,6 +30,16 @@ English summary: a doc-driven five-phase firmware workflow skill for ZCode (envi
 - **架构覆盖**：ARM Cortex-M（STM32/GD32/nRF/RP2040 等）、部分 RISC-V（WCH CH32V、ESP32-C 系）、8051（STC/N76/AT89）。AVR/MSP430/PIC/STM8 等平台可使用通用流程，但无专项评审清单。
 - **客户端兼容**：ZCode 桌面端（本地目录市场源与 GitHub 市场源）。插件全部为 Markdown/JSON，无运行时依赖，不需要 Node/Python。
 - **安装验证状态**：**尚未在任何环境完成实际安装验证**；本地目录源与 GitHub 源的完整安装流程均待实测（欢迎反馈）。行为验收样例见 [docs/acceptance-examples.md](docs/acceptance-examples.md)。
+
+## 仓库维护校验
+
+修改 skill、插件清单或验收样例后，可用 Python 3.10+ 标准库检查 frontmatter、内部引用、插件路径、README 技能目录和验收编号：
+
+```sh
+python scripts/validate_repo.py
+```
+
+该脚本只校验仓库结构与文档一致性，不替代插件安装和 A1–A19 行为验收；插件运行本身不依赖 Python。
 
 ## 文档驱动用法
 

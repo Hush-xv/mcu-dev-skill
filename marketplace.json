@@ -1,16 +1,16 @@
 {
   "name": "mcu-dev-skill",
-  "description": "Universal MCU firmware development skills for ZCode: doc-driven five-phase pipeline with ARM Cortex-M / RISC-V / 8051 review checklists and board-profile knowledge capture.",
+  "description": "Universal MCU firmware skills for ZCode: doc-driven workflow, embedded C quality review, architecture checklists, and board-profile capture.",
   "plugins": [
     {
       "name": "mcu-dev-skill",
       "source": "./mcu-dev-skill",
       "version": "0.4.0",
-      "description": "Universal MCU firmware development workflow: doc-driven five-phase pipeline with per-architecture review checklists (ARM Cortex-M, RISC-V, 8051) and board-profile knowledge capture.",
+      "description": "Universal MCU firmware workflow with embedded C quality review, per-architecture checklists (ARM Cortex-M, RISC-V, 8051), and board-profile knowledge capture.",
       "displayName": "MCU Dev Skill",
       "displayName_i18n": { "zh-CN": "通用MCU开发技能" },
       "description_i18n": {
-        "zh-CN": "文档驱动的通用单片机固件开发流水线：环境分析→手册精读→编码→硬件评审→构建门禁，含 ARM Cortex-M / RISC-V / 8051 三套架构评审清单与板级档案沉淀。"
+        "zh-CN": "通用单片机固件工作流，含架构无关的嵌入式 C 质量评审、ARM Cortex-M / RISC-V / 8051 专项清单与板级档案。"
       },
       "category": "developer-tools"
     }

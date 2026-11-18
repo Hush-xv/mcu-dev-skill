@@ -9,7 +9,7 @@ description: |
 
 # ARM Cortex-M 评审清单
 
-配合 `embedded-workflow` 阶段 4 使用。按问题范围裁剪：窄问题只核查相关类目，输出结论+问题列表；用户要求全面评审或改动跨类目时才逐类核查，分级 Critical / High / Medium 出完整报告。修复默认输出**最小可应用 diff**；仅单文件示例或用户明确要求完整替换时才输出完整文件。
+配合 `embedded-workflow` 阶段 4 使用。按问题范围裁剪：窄问题只核查相关类目并说明范围；用户要求全面评审或改动跨类目时才逐类核查。发现按 `embedded-workflow` 的统一证据和严重度规则报告，不为风格偏好定级。修复默认输出**最小可应用 diff**；仅单文件示例或用户明确要求完整替换时才输出完整文件。
 
 **适用范围标注**：标【STM32/GD32】等前缀的项仅适用对应平台；其余为 Cortex-M 通用检查。RP2040（XIP 外置 Flash）、nRF 等平台遇到不适用项时，按其手册确认对应概念，不照单全查。
 
@@ -34,7 +34,7 @@ description: |
 
 - [ ] 优先级分组只在启动时设置一次
 - [ ] 所有优先级在 `__NVIC_PRIO_BITS` 有效范围内
-- [ ] **FreeRTOS 边界**：调用 FreeRTOS API 的 ISR 优先级 ≥ `configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY`（数值上更低优先）
+- [ ] **FreeRTOS 边界**：调用 FreeRTOS API 的 ISR 不得比 port 允许的 syscall 边界更高优先级；先检查项目实际定义的阈值宏与表示方式——`configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY` 通常是未移位的库优先级，`configMAX_SYSCALL_INTERRUPT_PRIORITY` 通常是写入 NVIC 的移位值，不能混用比较。使用 CMSIS `NVIC_SetPriority()` 时按其接口要求传未移位逻辑优先级；比较方向按 Cortex-M 数值越大、紧急度越低解释
 - [ ] 每个使能的中断都有处理函数；共享向量处理所有可能的标志源
 - [ ] 使能中断前先清 pending 标志（否则一使能就触发）
 - [ ] ISR 内无阻塞操作（延时、printf、互斥量）
@@ -52,14 +52,14 @@ description: |
 
 ## 5. 内存与 volatile
 
-- [ ] `volatile`：硬件寄存器指针、ISR 与主循环共享变量，全部加上（只解决可见性，不保证原子性——按访问宽度与并发场景补临界区/原子操作）
-- [ ] SCB/NVIC 寄存器写入后加 `__DSB()` / `__ISB()` 屏障
+- [ ] 按编译器/ABI 判断硬件寄存器及 ISR 异步共享对象是否需要 `volatile` 保证实际读写；它不提供原子性或任务同步，按访问宽度和并发关系补临界区、原子操作或 RTOS 同步原语
+- [ ] 仅在架构、CMSIS 或器件文档要求的系统控制操作后使用 `__DSB()` / `__ISB()`；按操作要求选择屏障类型与位置，不在每次 SCB/NVIC 写入后机械添加
 - [ ] 链接脚本栈空间 ≥ 最坏调用深度 + ISR 嵌套；ISR 内不开大局部数组
 - [ ] 读改写用 `|=` / `&= ~`，保留位不破坏；状态标志清除方式按外设规定（读清 / 写 1 清）
 
 ## 6. FreeRTOS（如使用）
 
-- [ ] 【STM32 HAL】HAL 时基不用 SysTick（换 TIM6/7 等空闲定时器）
+- [ ] 【STM32 HAL + RTOS】优先评估用独立定时器作为 HAL 时基，避免与 RTOS 共用 SysTick 时的 tick/优先级冲突；若保留 SysTick，核对 HAL tick 与 RTOS tick 的处理、优先级及 ISR 调用约束（符合 HAL 编程模型时可共用）
 - [ ] ISR 内只用 `*FromISR()` 变体，唤醒更高优先级任务后调 `portYIELD_FROM_ISR()`
 - [ ] `configPRIO_BITS` 与芯片 `__NVIC_PRIO_BITS` 一致
 - [ ] 任务栈用 `uxTaskGetStackHighWaterMark` 验证过；开发期开 `configCHECK_FOR_STACK_OVERFLOW`
@@ -88,7 +88,7 @@ description: |
 | DMA 传输静默失败/数据全 0 | 缓冲区在该平台不可 DMA 的内存（【STM32/GD32】CCM/DTCM） | 验证：链接脚本查看缓冲区所在段；修法：移入可 DMA 区域并按平台要求对齐 |
 | 优化后 ISR 读到的总是旧值 | ISR 共享变量缺 volatile | 验证：反汇编确认读取被优化外提；修法：加 volatile，必要时加屏障 |
 | SPI 完全不通 | CPOL/CPHA 与从机不符 | 验证：逻辑分析仪比对时钟相位；修法：按从机手册改模式 0~3 |
-| 调用 FromISR 即硬错误 | ISR 优先级越过 FreeRTOS 边界 | 验证：核对优先级数值与 `configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY`；修法：调至边界内 |
+| 调用 FromISR 即硬错误 | ISR 优先级越过 FreeRTOS 边界，或宏表示方式用错 | 验证：核对 FreeRTOS port、配置阈值宏及 NVIC API 使用的优先级表示；修法：按同一表示方式将 ISR 放到允许调用 API 的优先级范围 |
 | 一个外设的 DMA 无故失效 | DMA 通道/请求源冲突（【STM32/GD32】共用同一流） | 验证：列出全部 DMA 分配；修法：重映射或改轮询 |
 | SWD 突然连不上芯片 | 调试引脚被应用重配（【STM32/GD32】PA13/PA14；nRF 为专用 SWDIO/SWDCLK） | 验证：检查最近 GPIO 配置改动；修法：Connect-Under-Reset 恢复（依型号），代码禁配调试引脚 |
 | 程序在 ISR 里卡死 | ISR 内调 HAL_Delay | 验证：检查 ISR 调用链；修法：延时移出 ISR，用标志位+主循环 |

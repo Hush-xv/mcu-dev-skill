@@ -9,7 +9,7 @@ description: |
 
 # RISC-V 评审清单
 
-配合 `embedded-workflow` 阶段 4 使用。覆盖 WCH CH32V / GD32V / ESP32-C 系三类主流生态。按问题范围裁剪：窄问题只核查相关类目，输出结论+问题列表；用户要求全面评审或改动跨类目时才逐类核查，分级 Critical / High / Medium 出完整报告。修复默认输出**最小可应用 diff**；仅单文件示例或用户明确要求完整替换时才输出完整文件。
+配合 `embedded-workflow` 阶段 4 使用。覆盖 WCH CH32V / GD32V / ESP32-C 系三类主流生态。按问题范围裁剪：窄问题只查相关类目并说明范围；用户要求全面评审或改动跨类目时才逐类核查。发现按 `embedded-workflow` 的统一证据和严重度规则报告，不为风格偏好定级。修复默认输出**最小可应用 diff**；仅单文件示例或用户明确要求完整替换时才输出完整文件。
 
 ## 1. 工具链与 ABI（RISC-V 特有，最高频翻车点）
 
@@ -38,8 +38,8 @@ description: |
 
 - [ ] CH32V003 仅 **2KB RAM**：.data+.bss+栈总和必须逐项核对，链接脚本里栈顶定义与 .bss 末尾不重叠
 - [ ] DMA 缓冲区对齐与所在 RAM 区域可 DMA 性确认（逐型号）
-- [ ] `volatile` 纪律与 ARM 相同：寄存器、ISR 共享变量
-- [ ] 大缓冲区考虑放 XRAM（有该特性的型号如 V307）
+- [ ] 按目标编译器/ABI 判断寄存器及 ISR 异步共享对象是否需要 `volatile`；它不保证原子性或任务同步，按并发关系选择临界区、原子操作或 RTOS 同步原语
+- [ ] 大缓冲区需要外扩时，先核对具体型号的外部存储器接口和板级连接；CH32V307 提供 FSMC，可在板上实际连接外部 SRAM 时使用，不代表芯片内置 XRAM
 
 ## 5. DMA（WCH/GD32）
 
@@ -57,7 +57,7 @@ description: |
 
 ## 7. ESP-IDF 生态（如使用 ESP32-C 系）
 
-- [ ] FreeRTOS 为 IDF 原生集成，任务/队列 API 前缀 `xTask`/`xQueue` 与 IDF 特有 API 不混用
+- [ ] FreeRTOS 为 IDF 原生集成：标准 FreeRTOS API 与 IDF 扩展 API 可按功能共同使用；使用 `PinnedToCore`、IDF SMP 或其他扩展时核对目标 IDF 版本的签名、内存/调度语义，不重复封装同一功能
 - [ ] flash 分区表与 app 偏移核对；`idf.py flash` 的端口与波特率
 - [ ] 外设驱动用 IDF 组件（driver/uart.h 等）还是寄存器直访，风格统一
 
